@@ -3,10 +3,13 @@ var request = require('request');
 var http = require('http')
 var app = express()
 
-app.configure(function() {
-    app.set('port', process.env.PORT || 3000);
-    app.set('view engine', 'ejs');
-});
+app.set('port', process.env.PORT || 3000);
+app.set('view engine', 'ejs');
+
+/*app.configure(function() {
+ 
+    
+});*/
 
 //app.set('views', '/views')
 
