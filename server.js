@@ -1,5 +1,6 @@
 var express = require('express')
 var request = require('request');
+var http = require('http')
 var app = express()
 
 //app.set('views', '/views')
@@ -15,4 +16,7 @@ app.get('/test', function(req, res) {
     })
 })
 
-app.listen(8082)
+var server = http.createServer(app);
+server.listen(app.get('port'), function () {
+    console.log("Express server listening on port " + app.get('port'));
+});
