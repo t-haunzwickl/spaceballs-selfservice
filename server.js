@@ -1,27 +1,128 @@
-var express = require('express')
-var request = require('request');
-var http = require('http')
-var app = express()
 
-app.set('port', process.env.PORT || 3000);
+// Node framework dependecies
+// -----------------------------------------------------------------------------
+var express = require('express');
+var session = require('express-session');
+var request = require('request');
+var http = require('http');
+var bodyParser = require('body-parser');
+var basicAuth = require('express-basic-auth');
+
+// Initialize ExpressJS app
+// -----------------------------------------------------------------------------
+var app = express();
+
+request.debug = true
+
+// Local variables
+// -----------------------------------------------------------------------------
+app.locals.title = 'SPACEBALLS.IO self service portal';
+
+// Session variables
+// -----------------------------------------------------------------------------
+app.use(session({
+    secret:'Sisoej333444osls.x',
+    resave: true,
+    saveUninitialized: true
+}));
+
+// Views & templateing engine setup
+// -----------------------------------------------------------------------------
 app.set('view engine', 'ejs');
 
-/*app.configure(function() {
- 
-    
+/*app.use(function(req, res, next) {
+    next();
+    /*if (req.session.system == null) {
+        res.redirect('/');
+    } else {
+        next();
+    }
 });*/
 
-//app.set('views', '/views')
+app.use(basicAuth({
+    users: { 'azure': 'test' },
+    challenge: true,
+    realm: 'jsdfo234S'
+}))
 
+// create application/json parser
+var jsonParser = bodyParser.json()
+
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+
+// Routes
+// -----------------------------------------------------------------------------
 app.get('/', function(req, res) {
-    res.render('index')
+    res.render('pages/prod', {
+        session: req.session
+    })
+});
+
+app.get('/vm', function(req, res) {
+    res.render('pages/virtual_machine')
+});
+
+app.get('/webapp', function(req, res) {
+    res.render('pages/webapp')
+});
+
+app.get('/prod', function(req, res) {
+    res.render('pages/prod')
+});
+
+app.post('/webapp/create', jsonParser, function(req, res) {
+
+    var jsonObject = req.body;
+
+    var headersOpt = {  
+        "content-type": "application/json",
+    };
+
+    request(
+        {
+            method: 'post',
+            url: 'https://s2events.azure-automation.net/webhooks?token=2mn6820HxKbSMYeo6geKj%2bj158N8CL7ynLe10L4OKug%3d',
+            body: jsonObject,
+            headers: headersOpt,
+            json: true,
+        }, function (error, response, body) {
+            console.log('REQUEST RESULTS:', error, response.statusCode, body);
+        }
+    )
+  
+    /*request.post('http://www.greco.at', function(error, response, body) {
+        console.log('body:', body);
+    })*/
+});
+
+app.post('/prod/create', jsonParser, function(req, res) {
+        var jsonObject = req.body;
+    
+        var headersOpt = {  
+            "content-type": "application/json",
+        };
+    
+        request(
+            {
+                method: 'post',
+                url: 'https://s2events.azure-automation.net/webhooks?token=7UdpuBLUh%2fmJuavUanF93ZXRgrTBgyT5THBjBOG9qQg%3d',
+                body: jsonObject,
+                headers: headersOpt,
+                json: true,
+            }, function (error, response, body) {
+                console.log('REQUEST RESULTS:', error, response.statusCode, body);
+            }
+        )
+
+        res.send('Done!');
 })
 
-app.get('/test', function(req, res) {
-    request.post('https://s2events.azure-automation.net/webhooks?token=BnQu8dNfv4kSr0DRvuBL88OBelOdTd3qCe%2bFT4O5Ofc%3d', function(error, response, body) {
-        console.log('body:', body);
-    })
-})
+
+// Start server
+// -----------------------------------------------------------------------------
+app.set('port', process.env.PORT || 3000);
 
 var server = http.createServer(app);
 server.listen(app.get('port'), function () {
