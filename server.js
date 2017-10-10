@@ -45,6 +45,12 @@ app.use(basicAuth({
     realm: 'jsdfo234S'
 }))
 
+app.use('/img',express.static(__dirname + '/public/img'));
+app.use('/js',express.static(__dirname + '/public/js'));
+app.use('/css',express.static(__dirname + '/public/css'));
+app.use('/fonts',express.static(__dirname + '/public/fonts'));
+app.use('/icons-reference',express.static(__dirname + '/public/icons-reference'));
+
 // create application/json parser
 var jsonParser = bodyParser.json()
 
@@ -55,13 +61,17 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 // Routes
 // -----------------------------------------------------------------------------
 app.get('/', function(req, res) {
-    res.render('pages/prod', {
+    res.render('pages/index', {
         session: req.session
     })
 });
 
 app.get('/vm', function(req, res) {
     res.render('pages/virtual_machine')
+});
+
+app.get('/development', function(req, res) {
+    res.render('pages/development')
 });
 
 app.get('/webapp', function(req, res) {
@@ -97,18 +107,31 @@ app.post('/webapp/create', jsonParser, function(req, res) {
     })*/
 });
 
-app.post('/prod/create', jsonParser, function(req, res) {
+app.post('/development/create', jsonParser, function(req, res) {
         var jsonObject = req.body;
-    
+   
         var headersOpt = {  
             "content-type": "application/json",
         };
     
+        var rgName = jsonObject.team + "-" + jsonObject.environment + "-rg"
+
+        var dataObject = {
+            "rgName": rgName,
+            "location": jsonObject.location,
+            "templateParameters": {
+                "team": {"value": jsonObject.team},
+                "environment": {"value": jsonObject.environment}
+            }
+        }
+
+        console.log (dataObject);
+
         request(
             {
                 method: 'post',
-                url: 'https://s2events.azure-automation.net/webhooks?token=7UdpuBLUh%2fmJuavUanF93ZXRgrTBgyT5THBjBOG9qQg%3d',
-                body: jsonObject,
+                url: 'https://prod-40.westeurope.logic.azure.com:443/workflows/def5e8044c53431f8c83957a7eecf8fc/triggers/manual/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=fCM_uQwYxW3EGfdrwXAMecovsinydoMx4tQoW_TdzAA',
+                body: dataObject,
                 headers: headersOpt,
                 json: true,
             }, function (error, response, body) {
