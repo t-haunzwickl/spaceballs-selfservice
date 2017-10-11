@@ -62,7 +62,8 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false })
 // -----------------------------------------------------------------------------
 app.get('/', function(req, res) {
     res.render('pages/index', {
-        session: req.session
+        session: req.session,
+        menu: 'home'
     })
 });
 
@@ -71,7 +72,7 @@ app.get('/vm', function(req, res) {
 });
 
 app.get('/development', function(req, res) {
-    res.render('pages/development')
+    res.render('pages/development', { menu: 'development'})
 });
 
 app.get('/webapp', function(req, res) {
@@ -119,6 +120,7 @@ app.post('/development/create', jsonParser, function(req, res) {
         var dataObject = {
             "rgName": rgName,
             "location": jsonObject.location,
+            "email": jsonObject.email,
             "templateParameters": {
                 "team": {"value": jsonObject.team},
                 "environment": {"value": jsonObject.environment}

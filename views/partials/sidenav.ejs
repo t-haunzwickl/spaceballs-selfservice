@@ -12,8 +12,8 @@
     <!-- Sidebar Navidation Menus-->
     <span class="heading">Main</span>
     <ul class="list-unstyled">
-        <li class="active"> <a href="./"><i class="icon-home"></i>Home</a></li>
-        <li> <a href="development"> <i class="icon-flask"></i>Dev. Environment</a></li>
+        <li <% if (menu == 'home') { %> class="active" <% } %> > <a href="./"><i class="icon-home"></i>Home</a></li>
+        <li <% if (menu == 'development') { %> class="active" <% } %> > <a href="development"> <i class="icon-flask"></i>Dev. Environment</a></li>
         <!--<li><a href="#dashvariants" aria-expanded="false" data-toggle="collapse"> <i class="icon-interface-windows"></i>Dropdown </a>
         <ul id="dashvariants" class="collapse list-unstyled">
             <li><a href="#">Page</a></li>

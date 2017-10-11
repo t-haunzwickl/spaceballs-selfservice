@@ -23,7 +23,7 @@
           </header>
           <ul class="breadcrumb">
             <div class="container-fluid">
-              <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+              <li class="breadcrumb-item"><a href="/">Home</a></li>
               <li class="breadcrumb-item active">Dev. Environment</li>
             </div>
           </ul>
@@ -36,7 +36,7 @@
                         <h3 class="h4">Create a new environment</h3>
                       </div>
                       <div class="card-body">
-                          <form class="form-horizontal">
+                          <form class="form-horizontal" action="#">
                             <div class="form-group row">
                               <label class="col-sm-3 form-control-label">Team</label>
                               <div class="col-sm-9">
@@ -54,7 +54,7 @@
                             <div class="form-group row">
                               <label class="col-sm-3 form-control-label">Location</label>
                               <div class="col-sm-9 select">
-                                <select name="location" class="form-control" id="location">
+                                <select class="form-control" id="location">
                                   <option value="southeastasia">South East Asia</option>
                                   <option value="westeurope">West Europe</option>
                                 </select>
@@ -64,7 +64,7 @@
                             <div class="form-group row">
                               <label class="col-sm-3 form-control-label">E-Mail Address</label>
                               <div class="col-sm-9">
-                                <input type="text" placeholder="me@me.com" class="form-control" id="email">
+                                <input type="email" placeholder="me@me.com" class="form-control" id="email" required="required">
                               </div>
                             </div>
                             <div class="line"></div>
@@ -97,6 +97,7 @@
 <% include ../partials/footer %>
 <script type="text/javascript">
   $(document).ready(function() {
+
     $("#create").click(function(e) { 
       e.preventDefault();
 
@@ -108,7 +109,7 @@
 
       var myData = {"team": team, "environment": environment, "location": location, "email": email};
 
-      $.ajax({
+      /*$.ajax({
         type: "POST",
         url: "/development/create",
         contentType: "application/json; charset=utf-8",
@@ -117,7 +118,7 @@
         async: false
       }).done(function(response) {
         alert ('Job started.');
-      });
+      });*/
     });
   });
 </script>
